@@ -474,36 +474,38 @@ void CartesianControllerBase::publishStateFeedback()
 {
   // End-effector pose
   auto pose = m_ik_solver->getEndEffectorPose();
-  if (m_feedback_pose_publisher->trylock())
+  if (m_feedback_pose_publisher)
   {
-    m_feedback_pose_publisher->msg_.header.stamp = get_node()->now();
-    m_feedback_pose_publisher->msg_.header.frame_id = m_robot_base_link;
-    m_feedback_pose_publisher->msg_.pose.position.x = pose.p.x();
-    m_feedback_pose_publisher->msg_.pose.position.y = pose.p.y();
-    m_feedback_pose_publisher->msg_.pose.position.z = pose.p.z();
+    geometry_msgs::msg::PoseStamped msg; 
+    msg.header.stamp = get_node()->now();
+    msg.header.frame_id = m_robot_base_link;
+    msg.pose.position.x = pose.p.x();
+    msg.pose.position.y = pose.p.y();
+    msg.pose.position.z = pose.p.z();
 
-    pose.M.GetQuaternion(m_feedback_pose_publisher->msg_.pose.orientation.x,
-                         m_feedback_pose_publisher->msg_.pose.orientation.y,
-                         m_feedback_pose_publisher->msg_.pose.orientation.z,
-                         m_feedback_pose_publisher->msg_.pose.orientation.w);
+    pose.M.GetQuaternion(msg.pose.orientation.x,
+                         msg.pose.orientation.y,
+                         msg.pose.orientation.z,
+                         msg.pose.orientation.w);
 
-    m_feedback_pose_publisher->unlockAndPublish();
+    m_feedback_pose_publisher->try_publish(msg);
   }
 
   // End-effector twist
   auto twist = m_ik_solver->getEndEffectorVel();
-  if (m_feedback_twist_publisher->trylock())
+  if (m_feedback_twist_publisher)
   {
-    m_feedback_twist_publisher->msg_.header.stamp = get_node()->now();
-    m_feedback_twist_publisher->msg_.header.frame_id = m_robot_base_link;
-    m_feedback_twist_publisher->msg_.twist.linear.x = twist[0];
-    m_feedback_twist_publisher->msg_.twist.linear.y = twist[1];
-    m_feedback_twist_publisher->msg_.twist.linear.z = twist[2];
-    m_feedback_twist_publisher->msg_.twist.angular.x = twist[3];
-    m_feedback_twist_publisher->msg_.twist.angular.y = twist[4];
-    m_feedback_twist_publisher->msg_.twist.angular.z = twist[5];
+    geometry_msgs::msg::TwistStamped msg;
+    msg.header.stamp = get_node()->now();
+    msg.header.frame_id = m_robot_base_link;
+    msg.twist.linear.x = twist[0];
+    msg.twist.linear.y = twist[1];
+    msg.twist.linear.z = twist[2];
+    msg.twist.angular.x = twist[3];
+    msg.twist.angular.y = twist[4];
+    msg.twist.angular.z = twist[5];
 
-    m_feedback_twist_publisher->unlockAndPublish();
+    m_feedback_twist_publisher->try_publish(msg);
   }
 }
 
