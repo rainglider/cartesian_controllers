@@ -278,8 +278,16 @@ CartesianControllerBase::on_activate(const rclcpp_lifecycle::State & previous_st
   }
 
   // Get command handles.
+
   for (const auto & type : m_cmd_interface_types)
-  {
+  {    
+    if (type == hardware_interface::HW_IF_POSITION){
+      m_joint_cmd_pos_handles.reserve(m_joint_names.size());
+    }
+    else {
+      m_joint_cmd_vel_handles.reserve(m_joint_names.size());
+    }
+
     if (!controller_interface::get_ordered_interfaces(command_interfaces_, m_joint_names, type,
                                                       (type == hardware_interface::HW_IF_POSITION)
                                                         ? m_joint_cmd_pos_handles
@@ -294,6 +302,7 @@ CartesianControllerBase::on_activate(const rclcpp_lifecycle::State & previous_st
   }
 
   // Get state handles.
+  m_joint_state_pos_handles.reserve(m_joint_names.size());
   if (!controller_interface::get_ordered_interfaces(state_interfaces_, m_joint_names,
                                                     hardware_interface::HW_IF_POSITION,
                                                     m_joint_state_pos_handles))
