@@ -59,11 +59,14 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         $<INSTALL_INTERFACE:include>
 )
 
-ament_target_dependencies(${PROJECT_NAME}
-        cartesian_controller_base
-        hardware_interface
-        pluginlib
-        rclcpp
+target_link_libraries(${PROJECT_NAME}
+  ${cartesian_controller_base_LIBRARIES}
+  ${hardware_interface_TARGETS}
+  ${pluginlib_TARGETS}
+  ${rclcpp_TARGETS}
+)
+target_include_directories(${PROJECT_NAME} PUBLIC
+  ${cartesian_controller_base_INCLUDE_DIRS}
 )
 
 target_link_libraries(${PROJECT_NAME}

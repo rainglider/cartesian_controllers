@@ -46,9 +46,18 @@ target_include_directories(${PROJECT_NAME}
     $<INSTALL_INTERFACE:include>
 )
 
-ament_target_dependencies(${PROJECT_NAME}
-        ${${PROJECT_NAME}_EXPORTED_TARGETS}
-        ${THIS_PACKAGE_INCLUDE_DEPENDS}
+target_link_libraries(${PROJECT_NAME}
+  ${cartesian_controller_base_LIBRARIES}
+  ${controller_interface_TARGETS}
+  ${geometry_msgs_TARGETS}
+  ${interactive_markers_TARGETS}
+  ${kdl_parser_TARGETS}
+  ${pluginlib_TARGETS}
+  ${rclcpp_TARGETS}
+  ${urdf_TARGETS}
+)
+target_include_directories(${PROJECT_NAME} PUBLIC
+  ${cartesian_controller_base_INCLUDE_DIRS}
 )
 
 # Prevent pluginlib from using boost

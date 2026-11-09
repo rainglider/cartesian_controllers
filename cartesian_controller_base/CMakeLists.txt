@@ -77,9 +77,14 @@ target_include_directories(${PROJECT_NAME}
     ${CMAKE_BINARY_DIR}  # ROS2VersionConfig.h
 )
 
-ament_target_dependencies(${PROJECT_NAME}
-        ${${PROJECT_NAME}_EXPORTED_TARGETS}
-        ${THIS_PACKAGE_INCLUDE_DEPENDS}
+target_link_libraries(${PROJECT_NAME}
+  ${controller_interface_TARGETS}
+  ${kdl_parser_TARGETS}
+  ${trajectory_msgs_TARGETS}
+  ${pluginlib_TARGETS}
+  ${urdf_TARGETS}
+  Eigen3::Eigen
+  ${realtime_tools_TARGETS}
 )
 
 
@@ -101,9 +106,14 @@ target_include_directories(ik_solvers
 # Prevent pluginlib from using boost
 target_compile_definitions(${PROJECT_NAME} PUBLIC "PLUGINLIB__DISABLE_BOOST_FUNCTIONS")
 
-ament_target_dependencies(ik_solvers
-        ${${PROJECT_NAME}_EXPORTED_TARGETS}
-        ${THIS_PACKAGE_INCLUDE_DEPENDS}
+target_link_libraries(ik_solvers
+  ${controller_interface_TARGETS}
+  ${kdl_parser_TARGETS}
+  ${trajectory_msgs_TARGETS}
+  ${pluginlib_TARGETS}
+  ${urdf_TARGETS}
+  Eigen3::Eigen
+  ${realtime_tools_TARGETS}
 )
 
 
